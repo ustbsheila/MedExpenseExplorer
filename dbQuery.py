@@ -18,11 +18,8 @@ from models import GeneralPayment
 #    def __repr__(self):
 #        return f'<GeneralPayment {self.RecordId}>'
 
-def add_payment(record_id, change_type, payment_publication_date):
-    new_payment = GeneralPayment(
-            RecordId=record_id, 
-            ChangeType=change_type, 
-            PaymentPublicationDate=payment_publication_date)
+def add_payment(row):
+    new_payment = GeneralPayment(**row)
     db.session.add(new_payment)
     db.session.commit()
     

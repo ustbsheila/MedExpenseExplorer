@@ -80,10 +80,11 @@ def import_most_recent_year_data_to_db(datasets_to_import):
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
     
-    
-    try:
-        dbQuery.add_payment(record_id='12345', change_type = 'NEW', payment_publication_date = '2022-10-09')
-    except exc.IntegrityError as err:
-        dbQuery.rollback()
-        if "Duplicate entry" in str(err):
-            print ("Duplicate key, skipping this row.")
+    rows = response.json().get('results')
+    for r in rows:
+        try:
+            dbQuery.add_payment(r)
+        except exc.IntegrityError as err:
+            dbQuery.rollback()
+            if "Duplicate entry" in str(err):
+                print ("Duplicate key, skipping this row.")
