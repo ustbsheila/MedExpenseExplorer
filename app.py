@@ -32,13 +32,10 @@ def home():
 
 @app.route('/import')
 def import_data():
-    res = "This is the import page. "
+    res = "============Importing Open Payments Datasets.============\n"
     
     datasets_to_import = dataIngestion.get_most_recent_year_identifiers()
-    dataIngestion.import_most_recent_year_data_to_db(datasets_to_import)
-    
-    exe = connection.execute('select * from GeneralPayment;')
-    res += str(exe.fetchall())
+    res += dataIngestion.import_most_recent_year_data_to_db(datasets_to_import)
 
     return res
 
