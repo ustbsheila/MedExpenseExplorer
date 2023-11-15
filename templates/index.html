@@ -1,20 +1,50 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov 11 00:05:08 2023
-
-@author: Sheila
-"""
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Web App</title>
+    <title>Data Import</title>
+    <!-- Link to Bootstrap CSS (you may need to adjust the version) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
-    <h1>Welcome to Flask Web App</h1>
-    <button onclick="window.location.href='/import'">Import the most recent year's data</button>
+
+<div class="container mt-5">
+    <h1>Data Import</h1>
+
+    <!-- Stylish button using Bootstrap classes -->
+    <button class="btn btn-primary btn-lg" id="importButton">
+        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+        Import Data
+    </button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#importButton').on('click', function() {
+            // Show the spinner while the import is in progress
+            $(this).find('.spinner-border').removeClass('d-none');
+
+            // Make an AJAX request to the /import_data endpoint
+            $.ajax({
+                url: '/import',
+                type: 'GET',
+                success: function(data) {
+                    console.log('Import request sent successfully');
+                    // You can update the UI or perform other actions if needed
+                },
+                error: function(error) {
+                    console.error('Error sending import request:', error);
+                },
+                complete: function() {
+                    // Hide the spinner after the request is complete
+                    $('#importButton').find('.spinner-border').addClass('d-none');
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

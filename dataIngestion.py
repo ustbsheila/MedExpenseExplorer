@@ -91,7 +91,7 @@ def import_most_recent_year_data_to_db(datasets_to_import):
         rows = response.json().get('results')
         dbQuery.add_payments_in_bulk(rows)
         offset += DATA_IMPORT_BATCH_SIZE
-        print ("================== Batch import completes with starting offset ", offset)
+        print ("================== Batch import completes with ending offset ", offset)
 
     offset = dbQuery.get_general_payment_offset()
     return import_status + "Data import completes. Current database has been updated with {} rows.".format(offset)

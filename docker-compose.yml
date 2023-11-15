@@ -1,3 +1,4 @@
+
 version: '3.8'
 
 services:
@@ -13,3 +14,8 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
+  open-payments-web-app:
+    build:
+      context: .
+    ports:
+      - "5000:5000"

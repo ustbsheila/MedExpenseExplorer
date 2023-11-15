@@ -10,6 +10,17 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from models import db
 
+
+def create_app():
+    app = Flask(__name__)
+
+    # Load configuration from a separate Config class
+    app.config.from_object(Config)
+
+    # Register blueprints and other configurations here
+
+    return app
+
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_ECHO'] = True
