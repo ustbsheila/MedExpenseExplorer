@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Search</h2>
+  <form method="post" action="{{ url_for('search.search') }}">
+    {{ form.hidden_tag() }}
+    {{ form.search_term.label }}
+    {{ form.search_term(class='form-control') }}
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+{% endblock %}

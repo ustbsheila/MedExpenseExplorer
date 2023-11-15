@@ -1,0 +1,29 @@
+<!-- templates/search_results.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Search Results</h2>
+  {% if results %}
+    <table class="table">
+      <thead>
+        <tr>
+          {% for column in results[0].__table__.columns %}
+            <th>{{ column.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in results %}
+          <tr>
+            {% for column in row.__table__.columns %}
+              <td>{{ row[column.name] }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{{ url_for('search.export_csv') }}" class="btn btn-primary">Download CSV</a>
+  {% else %}
+    <p>No results found.</p>
+  {% endif %}
+{% endblock %}

@@ -105,5 +105,12 @@ class GeneralPayment(db.Model):
 
     def __repr__(self):
         return f'<GeneralPayment {self.record_id}>'
+
+    def row2dict(row):
+        d = {}
+        for column in row.__table__.columns:
+            d[column.name] = str(getattr(row, column.name))
+
+        return d
     
     
