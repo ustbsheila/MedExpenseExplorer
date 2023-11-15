@@ -7,7 +7,7 @@ Created on Fri Nov 10 16:20:13 2023
 
 import math
 import requests
-import dbQuery
+from . import dbQuery
 
 DATA_IMPORT_BATCH_SIZE = 500 # the maximum number of rows retrieving from Open Payments API
 
@@ -74,8 +74,6 @@ def get_data_from_open_payments_api(offset, limit, distributionId):
         print(f"An error occurred: {e}")
         
     return response
-    
-    
 
 def import_most_recent_year_data_to_db(datasets_to_import):
     distributionId = datasets_to_import[-1]['identifier']
@@ -95,3 +93,7 @@ def import_most_recent_year_data_to_db(datasets_to_import):
 
     offset = dbQuery.get_general_payment_offset()
     return import_status + "Data import completes. Current database has been updated with {} rows.".format(offset)
+
+def start_data_import_process():
+    datasets_to_import = get_most_recent_year_identifiers()
+    return import_most_recent_year_data_to_db(datasets_to_import)

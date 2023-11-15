@@ -5,9 +5,7 @@ Created on Sun Nov 12 23:06:33 2023
 @author: Sheila
 """
 
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from app import db
 
 class GeneralPayment(db.Model):
     __tablename__ = 'GeneralPayment'
