@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Search</h2>
-  <form method="post" action="{{ url_for('search.search') }}">
-    {{ form.hidden_tag() }}
-    {{ form.search_term.label }}
-    {{ form.search_term(class='form-control') }}
-    <button type="submit" class="btn btn-primary">Search</button>
-  </form>
+<h2>Search</h2>
+<form method="post" action="{{ url_for('search.search') }}">
+    {{ form.csrf_token }}
+
+    <label for="column">Select Column:</label>
+    <select name="column" id="column">
+        {% for column in columns %}
+            <option value="{{ column }}">{{ column }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="search_term">Enter Content:</label>
+    <input type="text" name="search_term" id="search_term" autocomplete="off">
+
+    <button type="submit">Search</button>
+</form>
 {% endblock %}
