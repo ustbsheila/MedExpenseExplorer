@@ -1,15 +1,9 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Nov 12 23:06:33 2023
-
-@author: Sheila
-"""
-
 from app import db
+
 
 class GeneralPayment(db.Model):
     __tablename__ = 'GeneralPayment'
-    
+
     record_number = db.Column(db.String(30))
     change_type = db.Column(db.String(30))
     covered_recipient_type = db.Column(db.String(80))
@@ -112,5 +106,3 @@ class GeneralPayment(db.Model):
             d[column.name] = str(getattr(row, column.name))
 
         return d
-    
-    

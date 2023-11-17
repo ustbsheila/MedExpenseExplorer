@@ -1,7 +1,9 @@
 from apscheduler.schedulers.background import BackgroundScheduler
+
 from .dataUpdater import check_for_updated_data
 
 scheduler = BackgroundScheduler()
+
 
 def scheduled_job():
     print("Running scheduled job...")
@@ -10,6 +12,7 @@ def scheduled_job():
         check_for_updated_data,
         'cron', day='last mon', hour='*/12'
     )
+
 
 def start_scheduler():
     print("Starting background scheduler...")

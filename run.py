@@ -10,4 +10,3 @@ start_scheduler()
 if __name__ == "__main__":
     # Run the app on the development server
     app.run(debug=True)
-

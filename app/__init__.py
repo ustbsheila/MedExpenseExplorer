@@ -1,11 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from .config import Config
 from flask_wtf.csrf import CSRFProtect
+
+from .config import Config
 
 # Create a SQLAlchemy database instance
 db = SQLAlchemy()
 csrf = CSRFProtect()
+
 
 def create_app():
     # Create and configure the Flask app

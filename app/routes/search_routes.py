@@ -1,10 +1,12 @@
+import csv
+from io import StringIO
+
 from flask import render_template, Response
+
 from app.forms import SearchForm
 from models.generalpayment import GeneralPayment
 from . import search_bp
 
-import csv
-from io import StringIO
 
 @search_bp.route('/export_csv/<search_term>')
 def export_csv(search_term):
@@ -37,8 +39,8 @@ def search():
     columns = [column.name for column in GeneralPayment.__table__.columns]
 
     if form.validate_on_submit():
-        column = form.column.data # selected column
-        search_term = form.search_term.data # entered content
+        column = form.column.data  # selected column
+        search_term = form.search_term.data  # entered content
         results = GeneralPayment.query.filter(getattr(GeneralPayment, column).ilike(f'%{search_term}%')).limit(5).all()
         return render_template('search_results.html', results=results, search_term=search_term)
 
