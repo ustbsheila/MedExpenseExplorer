@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 10 16:20:13 2023
-
-@author: Sheila
-"""
-
 import math
 import requests
 from . import dbQuery
@@ -18,18 +11,15 @@ def download_file(url, local_filename):
             file.write(chunk)
 
 def get_most_recent_year_identifiers():           
-    # Replace this with the URL you want to send a GET request to
-    url = "https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items?show-reference-ids=false"  
+    url = "https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items?show-reference-ids=false"
     
     try:
         response = requests.get(url)
-    
         # Check if the request was successful (status code 200)
         if response.status_code == 200:
             print("Request was successful!")
         else:
             print(f"Request failed with status code {response.status_code}")
-    
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
     
@@ -53,6 +43,15 @@ def download_most_recent_year_data_as_csv(datasets_to_import):
         download_file(uri, local_filename)
         
 def get_data_from_open_payments_api(offset, limit, distributionId):
+    """
+    Given the datasets needed to import, call Open Payment API to retrieve data in batches and bulk insert to MySQL DB.
+
+    Parameters:
+    - datasets_to_import (list<dict>): The need to import dataset information used for calling API.
+
+    Returns:
+    - string: The data import stats to display in the frontend.
+    """
     # Continue to import data from previous offset
     url = "https://openpaymentsdata.cms.gov/api/1/datastore/query/" + distributionId
     params = {
@@ -76,6 +75,15 @@ def get_data_from_open_payments_api(offset, limit, distributionId):
     return response
 
 def import_most_recent_year_data_to_db(datasets_to_import):
+    """
+    Given the datasets needed to import, call Open Payment API to retrieve data in batches and bulk insert to MySQL DB.
+
+    Parameters:
+    - datasets_to_import (list<dict>): The need to import dataset information used for calling API.
+
+    Returns:
+    - string: The data import stats to display in the frontend.
+    """
     distributionId = datasets_to_import[-1]['identifier']
     
     offset = dbQuery.get_general_payment_offset()    
@@ -94,6 +102,13 @@ def import_most_recent_year_data_to_db(datasets_to_import):
     offset = dbQuery.get_general_payment_offset()
     return import_status + "Data import completes. Current database has been updated with {} rows.".format(offset)
 
+
 def start_data_import_process():
+    """
+    Start the data import process to retrieve the more recent year's General Payment data from Open Payment API (openpaymentsdata.cms.gov) and store the data in the connected MySQL DB.
+
+    Returns:
+    - string: The data import stats to display in the frontend.
+    """
     datasets_to_import = get_most_recent_year_identifiers()
     return import_most_recent_year_data_to_db(datasets_to_import)

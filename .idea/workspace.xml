@@ -8,13 +8,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/OpenPayment.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/OpenPayment.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/search_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/search_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/search_results.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/search_results.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/import_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/import_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/importdata/dataIngestion.py" beforeDir="false" afterPath="$PROJECT_DIR$/importdata/dataImporter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,6 +172,13 @@
       </split-second>
     </splitter>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
       <find>connection</find>
@@ -214,9 +218,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectFrameBounds">
     <option name="x" value="719" />
     <option name="width" value="1847" />
@@ -282,15 +286,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Sheila/Desktop/OpenPayments/OpenPayment/run.py",
-    "settings.editor.selected.configurable": "advanced.settings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Sheila/Desktop/OpenPayments/OpenPayment/run.py&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Sheila\Desktop\OpenPayments\OpenPayment" />
