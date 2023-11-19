@@ -2,7 +2,7 @@ import math
 
 import requests
 
-from . import dbQuery
+from models import dbQuery
 
 DATA_IMPORT_BATCH_SIZE = 500  # the maximum number of rows retrieving from Open Payments API
 
@@ -88,7 +88,7 @@ def get_data_from_open_payments_api(offset, limit, distributionId):
     return response
 
 
-def import_most_recent_year_data_to_db(datasets_to_import):
+def import_most_recent_year_data_to_db(dataset_to_import):
     """
     Given the datasets needed to import, call Open Payment API to retrieve data in batches and bulk insert to MySQL DB.
 
@@ -98,14 +98,15 @@ def import_most_recent_year_data_to_db(datasets_to_import):
     Returns:
     - string: The data import stats to display in the frontend.
     """
-    distributionId = datasets_to_import[-1]['identifier']
+    distributionId = dataset_to_import['identifier']
 
     offset = dbQuery.get_general_payment_offset()
     response = get_data_from_open_payments_api(offset=offset, limit=1,
                                                distributionId=distributionId)  # initial call to get table size
     table_size = response.json().get('count')
     remaining_batch_import_iterations = math.ceil(table_size / DATA_IMPORT_BATCH_SIZE)
-    import_status = "INFO: original table size is {}. Importing dataset from distrution Id {}. The process starts from offset {} with {} iterations. ".format(
+    import_status = ("INFO: original table size is {}. Importing dataset from distrution Id {}. "
+                     "The process starts from offset {} with {} iterations. ").format(
         table_size, distributionId, offset, remaining_batch_import_iterations)
 
     for i in range(remaining_batch_import_iterations):
@@ -122,10 +123,15 @@ def import_most_recent_year_data_to_db(datasets_to_import):
 
 def start_data_import_process():
     """
-    Start the data import process to retrieve the more recent year's General Payment data from Open Payment API (openpaymentsdata.cms.gov) and store the data in the connected MySQL DB.
+    Start the data import process to retrieve the more recent year's General Payment data from Open Payment API
+    (openpaymentsdata.cms.gov) and store the data in the connected MySQL DB.
 
     Returns:
     - string: The data import stats to display in the frontend.
     """
     datasets_to_import = get_most_recent_year_identifiers()
-    return import_most_recent_year_data_to_db(datasets_to_import)
+    process_status = "Data import Process: "
+    for dataset in datasets_to_import:
+        process_status += import_most_recent_year_data_to_db(dataset)
+
+    return process_status

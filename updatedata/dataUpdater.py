@@ -1,26 +1,111 @@
 import requests
+import math
 
+from models import dbQuery
+from datetime import datetime
+
+DATA_IMPORT_BATCH_SIZE = 500  # the maximum number of rows retrieving from Open Payments API
+
+def get_datasets_to_update(program_year_last_update_date_pair):
+    """
+    Filter the most recent year's General Payment Identifiers from the Open Payment API.
+
+    Returns:
+    - Response: Response from the API call.
+    """
+    url = "https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items?show-reference-ids=false"
+
+    response = requests.get(url)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        print("Request was successful!")
+    else:
+        print(f"Request failed with status code {response.status_code}")
+
+    # Extract the most recent year from the 'issued' column
+    datasets = response.json()
+    datasets_to_update = []
+    for item in datasets:
+        stored_program_years = program_year_last_update_date_pair.keys()
+        dataset_program_year = str(int(item['issued'][:4]) - 1) # issued date is at the next year of the program year
+        dataset_modified_date = datetime.strptime(item['modified'][:10], '%Y-%m-%d').date()
+
+        if (dataset_program_year in stored_program_years
+                and dataset_modified_date > program_year_last_update_date_pair.get(dataset_program_year)
+                and 'general payments' in item['theme'][0]['data'].lower()):
+            datasets_to_update += item.get('distribution')
+
+    return datasets_to_update
+
+def get_update_data_size_from_open_payments_api(distributionId):
+    url = "https://openpaymentsdata.cms.gov/api/1/datastore/sql"
+    query = "[SELECT COUNT(*) FROM {}]".format(distributionId) # TODO: filter unchanged results
+    print ("query: ", query)
+    params = {
+        'query': query
+    }
+    try:
+        response = requests.get(url, params=params)
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            print("Request was successful!")
+        else:
+            print(f"Request failed with status code {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+
+    return int(response.json()[0].get('expression'))
+
+
+def get_data_from_open_payments_api(offset, limit, distributionId):
+    url = "https://openpaymentsdata.cms.gov/api/1/datastore/sql"
+    query = "[SELECT * FROM {}][LIMIT {} OFFSET {}]".format(distributionId, limit, offset) # TODO: filter unchanged results
+    print ("query: ", query)
+    params = {
+        'query': query
+    }
+    try:
+        response = requests.get(url, params=params)
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            print("Request was successful!")
+        else:
+            print(f"Request failed with status code {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+
+    return response.json()
+
+
+def update_db(dataset_to_update):
+    offset = 0
+    distributionId = dataset_to_update['identifier']
+    update_data_size = get_update_data_size_from_open_payments_api(distributionId)
+    remaining_batch_import_iterations = math.ceil(update_data_size / DATA_IMPORT_BATCH_SIZE)
+
+    for i in range(remaining_batch_import_iterations):
+        rows = get_data_from_open_payments_api(offset=offset, limit=DATA_IMPORT_BATCH_SIZE,
+                                                   distributionId=distributionId)
+        dbQuery.update_payments_in_bulk(rows)
+        offset += DATA_IMPORT_BATCH_SIZE
+        print("================== Batch update completes with ending offset ", offset)
+
+    print("================== Data update completes for the distribution {}.".format(distributionId))
 
 def check_for_updated_data():
     print("Checking updates for General Payment data ...")
+    # TODO: remove it after testing
+    # program_year_last_update_date_pair = {}
+    # program_year_last_update_date_pair['2022'] = '06-30-2022'
+    # program_year_last_update_date_pair['2022'] = datetime.strptime(program_year_last_update_date_pair['2022'],
+    #                                                                '%m-%d-%Y').date()
 
-    # Replace 'your_api_endpoint' with the actual API endpoint you want to check
-    # api_endpoint = 'https://api.example.com/data'
-    #
-    # try:
-    #     # Make an API request to check for updated data
-    #     response = requests.get(api_endpoint)
-    #     response.raise_for_status()  # Raise an error for bad responses (4xx and 5xx)
-    #
-    #     # Parse the response and check for updates
-    #     updated_data = response.json()  # Adjust based on your API response format
-    #
-    #     # Your logic to handle the updated data
-    #     if updated_data:
-    #         print("Updated data found. Perform actions...")
-    #         # Update your database or take necessary actions
-    #     else:
-    #         print("No updated data.")
-    # except requests.exceptions.RequestException as e:
-    #     print(f"Error checking for updated data: {e}")
+    program_year_last_update_date_pair = dbQuery.get_last_update_date_for_program_year()
+    datasets_to_update = get_datasets_to_update(program_year_last_update_date_pair)
+    for dataset in datasets_to_update:
+        update_db(dataset)
+
+    print("================== Data update completes. Updated {} datasets.".format(len(datasets_to_update)))
+
+
 

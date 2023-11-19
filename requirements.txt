@@ -6,3 +6,4 @@ pymysql==1.1.0
 apscheduler==3.10.4
 backports.zoneinfo==0.2.1
 tzlocal==5.1
+flask_apscheduler==1.12.4
