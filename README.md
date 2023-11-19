@@ -1,6 +1,6 @@
 # MedExpense Explorer
 
-edExpense Explorer is a Web Application that provides access to information from the [Open Payments API](https://openpaymentsdata.cms.gov/about/api). It allows users to import the most recent year's data, checks regularly for updates, provides a search tool with a typeahead, and includes an "Export to Excel" feature for search results.
+MedExpense Explorer is a Python Flask Web Application  that provides access to information from the [Open Payments API](https://openpaymentsdata.cms.gov/about/api). It allows users to import the most recent year's data, checks regularly for updates, provides a search tool with a typeahead, and includes an "Export to Excel" feature for search results.
 
 ## Features
 

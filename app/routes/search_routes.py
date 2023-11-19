@@ -1,8 +1,8 @@
 import csv
 from io import StringIO
-
-from flask import render_template, Response
-
+from flask import jsonify
+from flask import render_template, Response, request
+from models import dbQuery
 from app.forms import SearchForm
 from models.generalpayment import GeneralPayment
 from . import search_bp
@@ -39,9 +39,15 @@ def search():
     columns = [column.name for column in GeneralPayment.__table__.columns]
 
     if form.validate_on_submit():
-        column = form.column.data  # selected column
+        column = form.column.data  # entered column
         search_term = form.search_term.data  # entered content
         results = GeneralPayment.query.filter(getattr(GeneralPayment, column).ilike(f'%{search_term}%')).limit(5).all()
         return render_template('search_results.html', results=results, search_term=search_term)
 
     return render_template('search.html', columns=columns, form=form)
+
+@search_bp.route('/get_search_data_for_typeahead', methods=['GET', 'POST'])
+def get_search_data():
+    columns = [column.name for column in GeneralPayment.__table__.columns]
+
+    return jsonify(columns)

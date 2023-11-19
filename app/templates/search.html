@@ -4,17 +4,51 @@
 <h2>Search</h2>
 <form method="post" action="{{ url_for('search.search') }}">
     {{ form.csrf_token }}
+    <label for="typeaheadInput">Enter column name:</label>
+    <input name="column" type="text" id="typeaheadInput" class="form-control" placeholder="change_type">
 
-    <label for="column">Select Column:</label>
-    <select name="column" id="column">
-        {% for column in columns %}
-            <option value="{{ column }}">{{ column }}</option>
-        {% endfor %}
-    </select>
 
     <label for="search_term">Enter Content:</label>
-    <input type="text" name="search_term" id="search_term" autocomplete="off">
+    <input type="text" name="search_term" id="search_term" class="form-control" placeholder="new">
 
     <button type="submit">Search</button>
 </form>
+
+<script>
+$(document).ready(function() {
+    // Make an AJAX request to the backend endpoint
+    $.ajax({
+        url: '/get_search_data_for_typeahead',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+            // Use the returned data to initialize Typeahead
+            $('#typeaheadInput').typeahead({
+                source: data,
+                minLength: 1, // Minimum characters before suggesting
+                highlight: true, // Highlight matches
+            });
+
+            // Handle selection from Typeahead
+            $('#typeaheadInput').on('typeahead:select', function(event, suggestion) {
+                // Perform your actions based on the selected suggestion
+                console.log('Selected:', suggestion);
+            });
+
+            // Optionally, you can trigger an action when pressing Enter
+            $('#typeaheadInput').keypress(function(e) {
+                if (e.which === 13) { // Enter key
+                    // Perform your action based on the entered value
+                    console.log('Search:', $(this).val());
+                }
+            });
+        },
+        error: function(error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+});
+</script>
+
 {% endblock %}

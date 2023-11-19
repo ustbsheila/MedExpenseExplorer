@@ -1,6 +1,6 @@
 from app import db
 from models.generalpayment import GeneralPayment
-from sqlalchemy import select
+from sqlalchemy import select, distinct
 from sqlalchemy.sql.expression import func
 from datetime import datetime
 
