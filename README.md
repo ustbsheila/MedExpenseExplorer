@@ -8,7 +8,7 @@ MedExpense Explorer is a Python Flask Web Application  that provides access to i
    - The application allows users to import the most recent year's data from the [Open Payments API](https://openpaymentsdata.cms.gov/about/api).
 
 2. **Regular Updates:**
-   - The application automatically checks for and fetches the most recent updates from the Open Payments API on a regular basis (every 12 hours on the last Monday of each month).
+   - The application automatically checks for and fetches the most recent updates from the Open Payments API on a regular basis (every 24 hours).
 
 3. **Search Tool with Typeahead:**
    - A powerful search tool with typeahead functionality enables users to quickly find relevant data. It supports searching one field. We may support searching across multiple fields in future.
@@ -74,12 +74,12 @@ docker exec -it mysql-db mysql -u ustbsheila -p
 SHOW DATABASES;
 
 -- Use a specific database
-USE your_database_name;
+USE openpaymentdb;
 
 -- Show tables in the selected database
 SHOW TABLES;
 
 -- Run a SQL query
-SELECT * FROM your_table_name;
+SELECT COUNT(*) FROM GeneralPayment;
 
 ```
