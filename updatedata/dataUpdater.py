@@ -1,10 +1,12 @@
-import requests
 import math
-
-from models import dbQuery
 from datetime import datetime
 
+import requests
+
+from models import dbQuery
+
 DATA_IMPORT_BATCH_SIZE = 500  # the maximum number of rows retrieving from Open Payments API
+
 
 def get_datasets_to_update(program_year_last_update_date_pair):
     """
@@ -27,7 +29,7 @@ def get_datasets_to_update(program_year_last_update_date_pair):
     datasets_to_update = []
     for item in datasets:
         stored_program_years = program_year_last_update_date_pair.keys()
-        dataset_program_year = str(int(item['issued'][:4]) - 1) # issued date is at the next year of the program year
+        dataset_program_year = str(int(item['issued'][:4]) - 1)  # issued date is at the next year of the program year
         dataset_modified_date = datetime.strptime(item['modified'][:10], '%Y-%m-%d').date()
 
         if (dataset_program_year in stored_program_years
@@ -37,10 +39,11 @@ def get_datasets_to_update(program_year_last_update_date_pair):
 
     return datasets_to_update
 
+
 def get_update_data_size_from_open_payments_api(distributionId):
     url = "https://openpaymentsdata.cms.gov/api/1/datastore/sql"
-    query = "[SELECT COUNT(*) FROM {}]".format(distributionId) # TODO: filter unchanged results
-    print ("query: ", query)
+    query = "[SELECT COUNT(*) FROM {}]".format(distributionId)  # TODO: filter unchanged results
+    print("query: ", query)
     params = {
         'query': query
     }
@@ -59,8 +62,9 @@ def get_update_data_size_from_open_payments_api(distributionId):
 
 def get_data_from_open_payments_api(offset, limit, distributionId):
     url = "https://openpaymentsdata.cms.gov/api/1/datastore/sql"
-    query = "[SELECT * FROM {}][LIMIT {} OFFSET {}]".format(distributionId, limit, offset) # TODO: filter unchanged results
-    print ("query: ", query)
+    query = "[SELECT * FROM {}][LIMIT {} OFFSET {}]".format(distributionId, limit,
+                                                            offset)  # TODO: filter unchanged results
+    print("query: ", query)
     params = {
         'query': query
     }
@@ -79,18 +83,19 @@ def get_data_from_open_payments_api(offset, limit, distributionId):
 
 def update_db(dataset_to_update):
     offset = 0
-    distributionId = dataset_to_update['identifier']
-    update_data_size = get_update_data_size_from_open_payments_api(distributionId)
+    distribution_id = dataset_to_update['identifier']
+    update_data_size = get_update_data_size_from_open_payments_api(distribution_id)
     remaining_batch_import_iterations = math.ceil(update_data_size / DATA_IMPORT_BATCH_SIZE)
 
     for i in range(remaining_batch_import_iterations):
         rows = get_data_from_open_payments_api(offset=offset, limit=DATA_IMPORT_BATCH_SIZE,
-                                                   distributionId=distributionId)
+                                               distributionId=distribution_id)
         dbQuery.update_payments_in_bulk(rows)
         offset += DATA_IMPORT_BATCH_SIZE
         print("================== Batch update completes with ending offset ", offset)
 
-    print("================== Data update completes for the distribution {}.".format(distributionId))
+    print("================== Data update completes for the distribution {}.".format(distribution_id))
+
 
 def check_for_updated_data():
     print("Checking updates for General Payment data ...")
@@ -106,6 +111,3 @@ def check_for_updated_data():
         update_db(dataset)
 
     print("================== Data update completes. Updated {} datasets.".format(len(datasets_to_update)))
-
-
-

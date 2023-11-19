@@ -1,7 +1,7 @@
 from flask import Flask
+from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-from flask_apscheduler import APScheduler
 
 from .config import Config
 
@@ -12,8 +12,6 @@ csrf = CSRFProtect()
 
 
 def create_app():
-    from updatedata.updateScheduler import scheduled_job
-
     # Create and configure the Flask app
     app = Flask(__name__)
 

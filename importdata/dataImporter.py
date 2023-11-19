@@ -24,7 +24,7 @@ def download_most_recent_year_data_as_csv(datasets_to_import):
 
 def get_most_recent_year_identifiers():
     """
-    Filter the most recent year's General Payment Identifiers from the Open Payment API.
+    Search the most recent year's General Payment Identifiers from the Open Payment API.
 
     Returns:
     - Response: Response from the API call.
@@ -45,7 +45,7 @@ def get_most_recent_year_identifiers():
     datasets = response.json()
     most_recent_year = max(datasets, key=lambda x: int(x['issued'][:4]))['issued'][:4]
 
-    # Filter the data with the following two conditions: 
+    # Get the data based on the following two conditions:
     # 1. get the most recent year's data
     # 2. get the General Payments category
     datasets_to_import = []
@@ -98,20 +98,20 @@ def import_most_recent_year_data_to_db(dataset_to_import):
     Returns:
     - string: The data import stats to display in the frontend.
     """
-    distributionId = dataset_to_import['identifier']
+    distribution_id = dataset_to_import['identifier']
 
     offset = dbQuery.get_general_payment_offset()
     response = get_data_from_open_payments_api(offset=offset, limit=1,
-                                               distributionId=distributionId)  # initial call to get table size
+                                               distributionId=distribution_id)  # initial call to get table size
     table_size = response.json().get('count')
     remaining_batch_import_iterations = math.ceil(table_size / DATA_IMPORT_BATCH_SIZE)
     import_status = ("INFO: original table size is {}. Importing dataset from distrution Id {}. "
                      "The process starts from offset {} with {} iterations. ").format(
-        table_size, distributionId, offset, remaining_batch_import_iterations)
+        table_size, distribution_id, offset, remaining_batch_import_iterations)
 
     for i in range(remaining_batch_import_iterations):
         response = get_data_from_open_payments_api(offset=offset, limit=DATA_IMPORT_BATCH_SIZE,
-                                                   distributionId=distributionId)
+                                                   distributionId=distribution_id)
         rows = response.json().get('results')
         dbQuery.add_payments_in_bulk(rows)
         offset += DATA_IMPORT_BATCH_SIZE

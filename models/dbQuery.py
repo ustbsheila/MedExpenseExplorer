@@ -85,7 +85,7 @@ def update_payments_in_bulk(rows):
 
 def update_payments_and_handle_error(rows):
     """
-    Individual insert rows to General Payment table in DB. Log error message if exception throws.
+    Individual insert rows to General Payment table in DB. Skip the row and log error message if exception throws.
     """
     for r in rows:
         try:

@@ -11,7 +11,7 @@ MedExpense Explorer is a Python Flask Web Application  that provides access to i
    - The application automatically checks for and fetches the most recent updates from the Open Payments API on a regular basis (every 12 hours on the last Monday of each month).
 
 3. **Search Tool with Typeahead:**
-   - A powerful search tool with typeahead functionality enables users to quickly find relevant data. It supports searching across various fields such as doctor names, payment types, and more.
+   - A powerful search tool with typeahead functionality enables users to quickly find relevant data. It supports searching one field. We may support searching across multiple fields in future.
 
 4. **Export to Excel:**
    - Once search results are retrieved, users can export the data to an Excel file (XLS). This feature provides a convenient way to analyze and share the obtained information.

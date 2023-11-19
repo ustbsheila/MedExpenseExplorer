@@ -1,8 +1,9 @@
 import csv
 from io import StringIO
+
 from flask import jsonify
-from flask import render_template, Response, request
-from models import dbQuery
+from flask import render_template, Response
+
 from app.forms import SearchForm
 from models.generalpayment import GeneralPayment
 from . import search_bp
@@ -12,7 +13,7 @@ from . import search_bp
 def export_csv(search_term):
     print("CVS export starts.")
     # Retrieve search results from db
-    results = GeneralPayment.query.filter(GeneralPayment.change_type.ilike(f'%{search_term}%')).limit(5).all()
+    results = GeneralPayment.query.filter(GeneralPayment.change_type.ilike(f'%{search_term}%')).all()
 
     # Convert results to CSV format
     csv_data = StringIO()
@@ -41,10 +42,11 @@ def search():
     if form.validate_on_submit():
         column = form.column.data  # entered column
         search_term = form.search_term.data  # entered content
-        results = GeneralPayment.query.filter(getattr(GeneralPayment, column).ilike(f'%{search_term}%')).limit(5).all()
+        results = GeneralPayment.query.filter(getattr(GeneralPayment, column).ilike(f'%{search_term}%')).limit(100).all()
         return render_template('search_results.html', results=results, search_term=search_term)
 
     return render_template('search.html', columns=columns, form=form)
+
 
 @search_bp.route('/get_search_data_for_typeahead', methods=['GET', 'POST'])
 def get_search_data():
