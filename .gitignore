@@ -1,0 +1,4 @@
+# Ingnore the followng files
+.idea
+__pycache__/
+venv/
