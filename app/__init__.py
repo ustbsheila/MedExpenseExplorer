@@ -32,6 +32,7 @@ def create_app():
     app.register_blueprint(search_bp)
 
     # Start the scheduler when the Flask application starts
+    from updatedata.updateScheduler import scheduled_job # import to load scheduled jobs
     app.config["SCHEDULER_API_ENABLED"] = True
     scheduler.init_app(app)
     scheduler.start()
