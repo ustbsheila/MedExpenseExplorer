@@ -12,8 +12,11 @@ def get_datasets_to_update(program_year_last_update_date_pair):
     """
     Filter the most recent year's General Payment Identifiers from the Open Payment API.
 
+    Parameters:
+    - program_year_last_update_date_pair (dict): Key is program year (string) and value is last update date (string) .
+
     Returns:
-    - Response: Response from the API call.
+    - List: a list of distribution information to retrieve need to update datasetss.
     """
     url = "https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items?show-reference-ids=false"
 
@@ -32,6 +35,10 @@ def get_datasets_to_update(program_year_last_update_date_pair):
         dataset_program_year = str(int(item['issued'][:4]) - 1)  # issued date is at the next year of the program year
         dataset_modified_date = datetime.strptime(item['modified'][:10], '%Y-%m-%d').date()
 
+        # Define dataset needs to update based on the following conditions:
+        # 1. the program year's data has been stored in database previously
+        # 2. the dataset has been modified after last update time in the database
+        # 2. it's in the General Payments category
         if (dataset_program_year in stored_program_years
                 and dataset_modified_date > program_year_last_update_date_pair.get(dataset_program_year)
                 and 'general payments' in item['theme'][0]['data'].lower()):
@@ -41,26 +48,43 @@ def get_datasets_to_update(program_year_last_update_date_pair):
 
 
 def get_update_data_size_from_open_payments_api(distributionId):
+    """
+    Given the distribution ID for the dataset, call Open Payment API to get the size of dataset.
+
+    Parameters:
+    - distributionId (string): An identity for a container for the data object.
+
+    Returns:
+    - int: the dataset size.
+    """
     url = "https://openpaymentsdata.cms.gov/api/1/datastore/sql"
     query = "[SELECT COUNT(*) FROM {}]".format(distributionId)  # TODO: filter unchanged results
     print("query: ", query)
     params = {
         'query': query
     }
-    try:
-        response = requests.get(url, params=params)
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            print("Request was successful!")
-        else:
-            print(f"Request failed with status code {response.status_code}")
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+    response = requests.get(url, params=params)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        print("Request was successful!")
+    else:
+        print(f"Request failed with status code {response.status_code}")
 
     return int(response.json()[0].get('expression'))
 
 
 def get_data_from_open_payments_api(offset, limit, distributionId):
+    """
+    Given the datasets needed to update, call Open Payment API to retrieve data in batches.
+
+    Parameters:
+    - offset (int): The number of rows to skip before starting to return results by calling API.
+    - limit (int): The maximum number of rows to be returned by the API.
+    - distributionId (string): An identity for a container for the data object.
+
+    Returns:
+    - dict: Response in json from the API call.
+    """
     url = "https://openpaymentsdata.cms.gov/api/1/datastore/sql"
     query = "[SELECT * FROM {}][LIMIT {} OFFSET {}]".format(distributionId, limit,
                                                             offset)  # TODO: filter unchanged results
@@ -82,6 +106,12 @@ def get_data_from_open_payments_api(offset, limit, distributionId):
 
 
 def update_db(dataset_to_update):
+    """
+    Given the datasets needed to import, call Open Payment API to retrieve data in batches and bulk update to MySQL DB.
+
+    Parameters:
+    - dataset_to_update (list<dict>): The need to update dataset information used for calling API.
+    """
     offset = 0
     distribution_id = dataset_to_update['identifier']
     update_data_size = get_update_data_size_from_open_payments_api(distribution_id)
@@ -98,6 +128,10 @@ def update_db(dataset_to_update):
 
 
 def check_for_updated_data():
+    """
+    Check if there's an update required and perform updates on DB. This function is called by a scheduled job.
+    """
+
     print("Checking updates for General Payment data ...")
     # TODO: remove it after testing
     # program_year_last_update_date_pair = {}

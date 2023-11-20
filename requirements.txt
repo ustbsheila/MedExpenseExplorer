@@ -1,9 +1,9 @@
-Flask==2.0.1
-SQLAlchemy==1.2.14
+Flask
+SQLAlchemy
+Werkzeug==2.2.2
+Flask-SQLAlchemy==3.0.5
+Flask-WTF==1.1.1
 requests==2.20.1
 WTForms~=3.0.0
 pymysql==1.1.0
-apscheduler==3.10.4
-backports.zoneinfo==0.2.1
-tzlocal==5.1
 flask_apscheduler==1.12.4

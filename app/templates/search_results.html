@@ -23,7 +23,7 @@
         {% endfor %}
       </tbody>
     </table>
-    <a href="{{ url_for('search.export_csv', column=column, search_term=search_term) }}" class="btn btn-primary">Download CSV</a>
+    <a href="{{ url_for('search.export_csv', column=column, search_term=search_term) }}" class="btn btn-primary">Export to Excel</a>
   {% else %}
     <p>No results found.</p>
   {% endif %}

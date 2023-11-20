@@ -26,9 +26,13 @@ MedExpense Explorer is a Python Flask Web Application  that provides access to i
 You can either run the application in your command line or run it in the docker container.
    * Run the Flask application in command line (for local development):
      * Install dependencies:
-      ``` .bash
-        pip install -r requirements.txt
-      ```
+          ``` .bash
+            pip install -r requirements.txt
+          ```
+     * Run MySQL db in the docker container
+       ``` .bash
+       docker-compose up -d mysql
+       ```
      * Enter the follow command line in the OpenPayment root directory.
        ``` .bash
        python run.py
@@ -39,6 +43,7 @@ You can either run the application in your command line or run it in the docker 
       ``` .bash
        docker-compose up -d
       ```
+     * Navigate to http://localhost:5000/ in the browser to interact with the web application.
 
 ## Usage
 
@@ -46,7 +51,7 @@ You can either run the application in your command line or run it in the docker 
 
 Navigate to http://127.0.0.1:5000/ in the web browser and click `Import Data` button to start import the most recent year's general payment data from Open Payments API. 
 
-> **_NOTE:_** Do not fresh the page during importing. It may take hours to finish data import. The import can be resumed from previous location if the application restarts.
+> **_NOTE:_** Do not repeatedly click the button quickly. It may take hours to finish data import. The import can be resumed from previous location if the application restarts.
 
 ### 2. Search Tool:
 

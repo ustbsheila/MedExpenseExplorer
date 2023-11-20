@@ -42,7 +42,8 @@ def search():
     if form.validate_on_submit():
         column = form.column.data  # entered column
         search_term = form.search_term.data  # entered content
-        results = GeneralPayment.query.filter(getattr(GeneralPayment, column).ilike(f'%{search_term}%')).limit(100).all()
+        results = GeneralPayment.query.filter(getattr(GeneralPayment, column).ilike(f'%{search_term}%')).limit(
+            100).all()
         return render_template('search_results.html', results=results, column=column, search_term=search_term)
 
     return render_template('search.html', columns=columns, form=form)

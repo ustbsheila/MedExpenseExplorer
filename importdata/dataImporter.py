@@ -58,7 +58,7 @@ def get_most_recent_year_identifiers():
 
 def get_data_from_open_payments_api(offset, limit, distributionId):
     """
-    Given the datasets needed to import, call Open Payment API to retrieve data in batches and bulk insert to MySQL DB.
+    Given the datasets needed to import, call Open Payment API to retrieve data in batches.
 
     Parameters:
     - offset (int): The number of rows to skip before starting to return results by calling API.
